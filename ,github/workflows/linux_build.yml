@@ -1,0 +1,47 @@
+name: FFmpeg Linux Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  ffmpeg-build:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        platform: [linux/amd64, linux/arm64, linux/arm/v7, linux/386]
+    env:
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v2
+      
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build amd64 release
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          file: Dockerfile
+          load: true
+          tags: ffmpeg:${{ matrix.platform }}
+
+      - name: Copy release
+        run: |
+          container_id=$(docker create ffmpeg:${{ matrix.platform }})
+
+          docker cp $container_id:/app/*.tar.xz .
+          docker rm -v $container_id
+
+      - name: Create GH release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
+          draft: true
+          files: *.tar.xz
