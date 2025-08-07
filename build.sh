@@ -7,6 +7,7 @@ FFMPEG_TAG=n7.1.1
 BUILD_DIR=$(pwd)/build
 DOWNLOAD_DIR=$(pwd)/dl
 INSTALL_DIR=$(pwd)
+DEST_DIR=$(pwd)/dest
 
 ARCH=$(uname -m)
 
@@ -53,6 +54,6 @@ for pc in $INSTALL_DIR/ffmpeg/lib/pkgconfig/*.pc; do
 done
 
 echo "Packaging FFmpeg for $arch..."
-cd $INSTALL_DIR
+mkdir $DEST_DIR && cd $DEST_DIR
 VERSION=$(printf "%s" "$FFMPEG_TAG" | cut -c2-)
 tar -cvJf ffmpeg-linux-$arch-$VERSION.tar.xz -C $INSTALL_DIR/ffmpeg .

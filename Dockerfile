@@ -1,11 +1,11 @@
 FROM debian:bullseye
 
 RUN apt-get update && \
-    apt-get install -y build-essential git curl tar && \
+    apt-get install -y build-essential git curl tar pkg-config nasm && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-COPY build2.sh .
-RUN chmod +x build2.sh && \
-    ./build2.sh
+COPY build.sh .
+RUN chmod +x build.sh && \
+    ./build.sh

@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        platform: [linux/amd64, linux/arm64, linux/arm/v7, linux/386]
+        platform: [linux/amd64, linux/arm64, linux/arm/v7]
     steps:
       - uses: actions/checkout@v3
 
@@ -28,13 +28,12 @@ jobs:
           platforms: ${{ matrix.platform }}
           file: Dockerfile
           load: true
-          tags: ffmpeg:${{ matrix.platform }}
+          tags: ffmpeg:latest
 
       - name: Copy release
         run: |
-          container_id=$(docker create ffmpeg:${{ matrix.platform }})
-
-          docker cp $container_id:/app/*.tar.xz .
+          container_id=$(docker create ffmpeg:latest)
+          docker cp $container_id:/app/dest .
           docker rm -v $container_id
 
       - name: Create GH release
@@ -44,4 +43,4 @@ jobs:
           generate_release_notes: true
           draft: true
           files: |
-            *.tar.xz
+            ./dest/*.tar.xz
