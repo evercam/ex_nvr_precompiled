@@ -46,12 +46,17 @@ jobs:
             ./dest/*.tar.xz
 
   macos:
-    runs-on: ${{ matrix.platform }}
-    strategy:
-      matrix:
-        platform: [macos-13, macos-14]
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v3
+
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@main
+
+      - name: Install dependencies
+        run: |
+          brew install nasm
 
       - name: Build macOS release
         run: |

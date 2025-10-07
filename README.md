@@ -7,7 +7,7 @@ Pre-compiled dependencies for [ExNVR](https://github.com/evercam/ex_nvr).
 ### FFmpeg
 The pre-compiled ffmpeg is available for the following platforms:
 * Linux amd64/arm64/armv7 
-* MacOS (arm64/amd64)
+* MacOS Silicon
 
 The following are the only  available features:
 
