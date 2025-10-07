@@ -34,9 +34,10 @@ build_ffmpeg() {
     cd $DOWNLOAD_DIR/ffmpeg
 
     ./configure --prefix="$INSTALL_DIR/ffmpeg" --pkg-config-flags="--static" --extra-libs="-lpthread -lm" --enable-gpl \
-                --disable-static --enable-shared --disable-programs --disable-doc --disable-avdevice --disable-avformat --disable-swresample \
-                --disable-postproc --disable-avfilter --disable-everything --enable-encoder=mjpeg --enable-encoder=libx264 --enable-decoder=h264 \
-                --enable-decoder=hevc --enable-libx264 --disable-sdl2 --disable-alsa
+                --disable-static --enable-shared --disable-all --disable-doc --enable-avdevice --enable-avformat \
+                --enable-avcodec --enable-swscale --enable-encoder=mjpeg --enable-encoder=libx264 --enable-decoder=rawvideo --enable-decoder=h264 \
+                --enable-decoder=hevc --enable-libx264 --disable-sdl2 --enable-indev=v4l2 --enable-indev=dshow --enable-indev=avfoundation \
+                --enable-indev=alsa
 
     make -j$(nproc)
     make install
