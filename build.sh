@@ -9,6 +9,7 @@ DOWNLOAD_DIR=$(pwd)/dl
 INSTALL_DIR=$(pwd)
 DEST_DIR=$(pwd)/dest
 
+OS=$(uname | tr '[:upper:]' '[:lower:]')
 ARCH=$(uname -m)
 
 build_x264() {
@@ -54,7 +55,7 @@ for pc in $INSTALL_DIR/ffmpeg/lib/pkgconfig/*.pc; do
     sed -i '/^Libs\.private:/d' "$pc"
 done
 
-echo "Packaging FFmpeg for $arch..."
+echo "Packaging FFmpeg for $ARCH..."
 mkdir $DEST_DIR && cd $DEST_DIR
 VERSION=$(printf "%s" "$FFMPEG_TAG" | cut -c2-)
-tar -cvJf ffmpeg-linux-$arch-$VERSION.tar.xz -C $INSTALL_DIR/ffmpeg .
+tar -cvJf ffmpeg-$OS-$ARCH-$VERSION.tar.xz -C $INSTALL_DIR/ffmpeg .

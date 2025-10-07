@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 jobs:
-  ffmpeg-build:
+  linux:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -35,6 +35,27 @@ jobs:
           container_id=$(docker create ffmpeg:latest)
           docker cp $container_id:/app/dest .
           docker rm -v $container_id
+
+      - name: Create GH release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
+          draft: true
+          files: |
+            ./dest/*.tar.xz
+
+  macos:
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      matrix:
+        platform: [macos-13, macos-14]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build macOS release
+        run: |
+          ./build.sh
 
       - name: Create GH release
         uses: softprops/action-gh-release@v1
